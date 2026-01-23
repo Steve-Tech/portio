@@ -30,7 +30,38 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 .- */
 
 #include "Python.h"
+
+#if defined(__linux__)
 #include <sys/io.h>
+#elif defined(__FreeBSD__)
+#include <machine/sysarch.h>
+#include <machine/cpufunc.h>
+#endif
+
+#if defined(__FreeBSD__)
+// FreeBSD replacement for ioperm
+static int ioperm(unsigned long from, unsigned long num, int enable) {
+    struct i386_ioperm_args args = {
+        .start = from,
+        .length = num,
+        .enable = enable
+    };
+    return sysarch(I386_SET_IOPERM, &args);
+}
+
+// iopl is not supported on FreeBSD, so we return an error
+static int iopl(int level) {
+    errno = 45; // EOPNOTSUPP
+    return errno;
+}
+
+#define outb_p outb
+#define outw_p outw
+#define outl_p outl
+#define inb_p inb
+#define inw_p inw
+#define inl_p inl
+#endif
 
 static PyObject *pio_outb(PyObject *self,PyObject *args)
 {
@@ -354,6 +385,7 @@ iopl (level)\n\
   access is granted to any I/O port.\n\
   On success, zero is returned. On error, the errno code is returned.\n\
   The use of iopl requires root privileges.\n\
+  iopl is not supported on FreeBSD and will always return an error.\n\
 \n\
 ";
 

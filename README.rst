@@ -133,6 +133,7 @@ calling **ioperm** or **iopl**. Otherwise you will get a segmentation fault.
   access is granted to any I/O port.
   On success, zero is returned. On error, the errno code is returned.
   The use of iopl requires root privileges.
+  iopl is not supported on FreeBSD and will always return an error.
 
 
 Requirements
