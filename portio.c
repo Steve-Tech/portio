@@ -344,9 +344,10 @@ ioperm (from,extent,enable)\n\
   On success, zero is returned. On error, the errno code is returned.\n\
   The use of ioperm requires root privileges.\n\
 \n\
-  Only the first 0x3ff I/O ports can be specified in this manner. To gain\n\
-  access to any I/O port in the whole (0x0000-0xffff) address range, use\n\
-  the iopl function. \n\
+  Before Linux 2.6.8, only the first 0x3ff I/O ports could be specified\n\
+  in this manner. For more ports, the iopl system call had to be used.\n\
+  Since Linux 2.6.8, the whole (0x0000-0xffff) address range can be\n\
+  specified.\n\
 \n\
 iopl (level)\n\
   Set the I/O privilege level of the current process. When level is 3\n\

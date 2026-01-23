@@ -123,9 +123,10 @@ calling **ioperm** or **iopl**. Otherwise you will get a segmentation fault.
   On success, zero is returned. On error, the errno code is returned.
   The use of ioperm requires root privileges.
 
-  Only the first 0x3ff I/O ports can be specified in this manner. To gain
-  access to any I/O port in the whole (0x0000-0xffff) address range, use
-  the iopl function. 
+  Before Linux 2.6.8, only the first 0x3ff I/O ports could be specified
+  in this manner. For more ports, the iopl system call had to be used.
+  Since Linux 2.6.8, the whole (0x0000-0xffff) address range can be
+  specified.
 
 **iopl (level)**
   Set the I/O privilege level of the current process. When **level** is 3
